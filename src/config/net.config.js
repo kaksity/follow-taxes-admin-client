@@ -1,5 +1,5 @@
 export const netConfig = {
-  baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:5000/api/v1/admin' : '/api',
+  baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:5000/api/v1/admin' : 'https://follow-taxes.herokuapp.com/api/v1/admin',
   cors: true,
   contentType: 'application/json;charset=UTF-8',
   messageDuration: 3000,
