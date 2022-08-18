@@ -1,0 +1,183 @@
+<template>
+  <el-dialog v-model="props.show" title="Create Project">
+    <template #default>
+      <el-form
+        ref="validateForm"
+        :model="inputForm"
+        :rules="rules"
+        label-width="auto"
+        label-position="top"
+      >
+        <el-form-item prop="projectTitle" label="Project Title">
+          <el-input v-model="inputForm.title" placeholder="Enter Project Title" />
+        </el-form-item>
+        <el-form-item prop="projectState" label="Project State">
+          <el-select
+            v-model="inputForm.state_id"
+            filterable
+            placeholder="Pick the State"
+            @change="updateLGASelectInput"
+          >
+            <el-option
+              v-for="state in stateOptions"
+              :key="state.id"
+              :label="state.state_name"
+              :value="state.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="projectLGA" label="Project LGA">
+          <el-select v-model="inputForm.lga_id" filterable placeholder="Select the LGA">
+            <el-option
+              v-for="lga in lgaOptions"
+              :key="lga.id"
+              :label="lga.lga_name"
+              :value="lga.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="projectYear" label="Project Year">
+          <el-input v-model="inputForm.year" placeholder="Enter the Project Year" />
+        </el-form-item>
+        <el-form-item prop="projectContractor" label="Project Contractor">
+          <el-select v-model="inputForm.contractor_id" filterable placeholder="Select">
+            <el-option
+              v-for="contractor in contractorOptions"
+              :key="contractor.id"
+              :label="contractor.contractor_name"
+              :value="contractor.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="projectBudgetAmount" label="Project Budget Amount">
+          <el-input v-model="inputForm.budget_amount" placeholder="Enter the budget amount" />
+        </el-form-item>
+        <el-form-item prop="projectContractAmout" label="Project Contract Amount">
+          <el-input v-model="inputForm.contract_amount" placeholder="Enter the contract amount" />
+        </el-form-item>
+        <el-form-item prop="projectMDA" label="Project MDA">
+          <el-select v-model="inputForm.mda_id" filterable placeholder="Select the MDA">
+            <el-option
+              v-for="mda in mdaOptions"
+              :key="mda.id"
+              :label="mda.mda_name"
+              :value="mda.id"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+    </template>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="closeModal">Cancel</el-button>
+        <el-button type="primary" :loading="isLoading" @click="createNewProject">
+          Create Project
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
+</template>
+
+<script setup>
+  import { ref, reactive, unref, onMounted } from 'vue';
+  import { getMdas } from '@/api/mda';
+  import { getContractors } from '@/api/contractor';
+  import { getAllLGAs } from '@/api/lga';
+  import { getStates } from '@/api/state';
+  import { createProject } from '@/api/project';
+  const props = defineProps({
+    show: Boolean,
+  });
+  const emits = defineEmits(['close', 'refresh']);
+  const inputForm = reactive({
+    title: '',
+    contractor_id: '',
+    state_id: '',
+    lga_id: '',
+    mda_id: '',
+    budget_amount: '',
+    year: '',
+  });
+  const validateForm = ref(null);
+  const isLoading = ref(false);
+  const rules = reactive({
+    title: [
+      {
+        required: true,
+        message: 'Please enter the project title',
+      },
+    ],
+    budget_amount: [
+      {
+        required: true,
+        message: 'Please enter the budget amount',
+      },
+    ],
+    contract_amount: [
+      {
+        required: true,
+        message: 'Please enter the budget amount',
+      },
+    ],
+  });
+  const mdaOptions = ref([]);
+  const contractorOptions = ref([]);
+  const stateOptions = ref([]);
+  const lgaOptions = ref([]);
+  async function loadSelectInputs() {
+    const { data: mdaData } = await getMdas();
+    mdaOptions.value = mdaData;
+
+    const { data: contractorData } = await getContractors();
+    contractorOptions.value = contractorData;
+
+    const { data: stateData } = await getStates();
+    stateOptions.value = stateData;
+
+    const { data: lgaData } = await getAllLGAs();
+    lgaOptions.value = lgaData;
+  }
+  async function updateLGASelectInput(value) {
+    console.log('Changed Selected', value);
+    const { data: lgaData } = await getAllLGAs(inputForm.state_id);
+    lgaOptions.value = lgaData;
+  }
+  onMounted(async () => {
+    await loadSelectInputs();
+  });
+  function clearInputs() {
+    inputForm.mda_name = '';
+  }
+  async function createNewProject() {
+    try {
+      const form = unref(validateForm);
+      if (!form) return;
+
+      await form
+        .validate((valid) => {
+          if (valid) {
+            isLoading.value = true;
+            console.log(inputForm);
+            createProject(inputForm).then(() => {
+              closeModal();
+            });
+          }
+        })
+        .finally(() => {
+          isLoading.value = false;
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  function closeModal() {
+    clearInputs();
+    emits('close');
+    emits('refresh');
+  }
+</script>
+<style scoped>
+  .dialog-footer button:first-child {
+    margin-right: 10px;
+  }
+</style>
