@@ -30,16 +30,7 @@
         t('login.loginBtn')
       }}</el-button>
     </el-form-item>
-    <el-divider>{{ t('login.thirdparty') }}</el-divider>
-    <el-form-item>
-      <div class="login-methods">
-        <icon-wechat theme="outline" size="24" fill="#333" />
-        <icon-alipay theme="outline" size="24" fill="#333" />
-        <icon-github theme="outline" size="24" fill="#333" />
-        <icon-twitter theme="outline" size="24" fill="#333" />
-        <icon-google theme="outline" size="24" fill="#333" />
-      </div>
-    </el-form-item>
+    <el-divider />
   </el-form>
 </template>
 

@@ -54,6 +54,16 @@ export const routes = [
         },
       },
       {
+        path: '/general-settings/sectors',
+        name: 'Sectors',
+        component: () => import('@/views/GeneralSettings/Sector/Index.vue'),
+        meta: {
+          title: 'General Settings - Sector',
+          icon: 'icon-code',
+          requiresAuth: true,
+        },
+      },
+      {
         path: '/general-settings/mdas',
         name: 'MDAs',
         component: () => import('@/views/GeneralSettings/Mda/Index.vue'),

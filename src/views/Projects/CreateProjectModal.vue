@@ -65,6 +65,16 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item prop="projectSector" label="Project Sector">
+          <el-select v-model="inputForm.sector_id" filterable placeholder="Select the Sector">
+            <el-option
+              v-for="mda in sectorOptions"
+              :key="mda.id"
+              :label="mda.sector_name"
+              :value="mda.id"
+            />
+          </el-select>
+        </el-form-item>
       </el-form>
     </template>
     <template #footer>
@@ -85,6 +95,7 @@
   import { getAllLGAs } from '@/api/lga';
   import { getStates } from '@/api/state';
   import { createProject } from '@/api/project';
+  import { getSectors } from '@/api/sector';
   const props = defineProps({
     show: Boolean,
   });
@@ -97,6 +108,7 @@
     mda_id: '',
     budget_amount: '',
     year: '',
+    sector_id: '',
   });
   const validateForm = ref(null);
   const isLoading = ref(false);
@@ -124,6 +136,7 @@
   const contractorOptions = ref([]);
   const stateOptions = ref([]);
   const lgaOptions = ref([]);
+  const sectorOptions = ref([]);
   async function loadSelectInputs() {
     const { data: mdaData } = await getMdas();
     mdaOptions.value = mdaData;
@@ -136,6 +149,9 @@
 
     const { data: lgaData } = await getAllLGAs();
     lgaOptions.value = lgaData;
+
+    const { data: sectorData } = await getSectors();
+    sectorOptions.value = sectorData;
   }
   async function updateLGASelectInput(value) {
     console.log('Changed Selected', value);

@@ -12,6 +12,7 @@
       <el-table-column label="Budget Amount" prop="project_budget_amount" />
       <el-table-column label="Contract Amount" prop="project_contract_amount" />
       <el-table-column label="MDA" prop="project_mda.mda_name" />
+      <el-table-column label="Sector" prop="project_sector.sector_name" />
       <el-table-column align="right">
         <template #default="scope">
           <!-- <el-button size="small" @click="handleEdit(scope.$index, scope.row)">Edit</el-button> -->
@@ -23,7 +24,16 @@
     </el-table>
     <el-divider></el-divider>
     <div class="example-pagination-block">
-      <el-pagination background layout="prev, pager, next" :page-count="paginationData.pageCount" @current-page="paginationData.currentPage" :pager-count="15" @current-change="fetchCurrentPage" @prev-click="getPreviousPage" @next-click="getNextPage"/>
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :page-count="paginationData.pageCount"
+        @current-page="paginationData.currentPage"
+        :pager-count="15"
+        @current-change="fetchCurrentPage"
+        @prev-click="getPreviousPage"
+        @next-click="getNextPage"
+      />
     </div>
     <create-project-modal
       :show="showCreateProjectModal"
@@ -50,11 +60,11 @@
   const paginationData = reactive({
     pageCount: 0,
     currentPage: 0,
-  })
+  });
   const params = reactive({
     per_page: 1,
     page: 1,
-  })
+  });
   // const contractorData = ref(null);
   const search = ref('');
   const filterTableData = computed(() =>
@@ -68,7 +78,7 @@
   //   contractorData.value = row;
   //   showEditContractorModal.value = true;
   // };
-  const loadingTable = ref(false)
+  const loadingTable = ref(false);
   const handleDelete = async (index, row) => {
     console.log(index, row);
     await deleteAProject(row.id);
@@ -93,15 +103,15 @@
   }
   async function fetchProjects(params) {
     try {
-      loadingTable.value = true
-      const { data, meta} = await getProjects(params);
+      loadingTable.value = true;
+      const { data, meta } = await getProjects(params);
       paginationData.pageCount = meta.total;
       paginationData.currentPage = meta.current_page;
       tableData.value = data;
-    } catch(e) {} finally {
-      loadingTable.value = false
+    } catch (e) {
+    } finally {
+      loadingTable.value = false;
     }
-    
   }
   async function loadProjects() {
     await fetchProjects(params);
