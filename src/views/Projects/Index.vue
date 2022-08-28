@@ -16,9 +16,18 @@
       <el-table-column align="right">
         <template #default="scope">
           <!-- <el-button size="small" @click="handleEdit(scope.$index, scope.row)">Edit</el-button> -->
-          <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)"
-            >Delete</el-button
-          >
+          <el-button
+            size="small"
+            :icon="Edit"
+            type="default"
+            @click="handleEdit(scope.$index, scope.row)"
+          />
+          <el-button
+            size="small"
+            :icon="Delete"
+            type="danger"
+            @click="handleDelete(scope.$index, scope.row)"
+          />
         </template>
       </el-table-column>
     </el-table>
@@ -29,7 +38,7 @@
         layout="prev, pager, next"
         :page-count="paginationData.pageCount"
         @current-page="paginationData.currentPage"
-        :pager-count="15"
+        :pager-count="100"
         @current-change="fetchCurrentPage"
         @prev-click="getPreviousPage"
         @next-click="getNextPage"
@@ -40,47 +49,46 @@
       @close="showCreateProjectModal = false"
       @refresh="loadProjects"
     />
-    <!-- <edit-contractor-modal
-      :show="showEditContractorModal"
-      @close="showEditContractorModal = false"
-      :contractor="contractorData"
+    <edit-project-modal
+      :show="showEditProjectModal"
+      @close="showEditProjectModal = false"
+      :projectId="projectData.id"
       @refresh="loadProjects"
-    /> -->
+    />
   </div>
 </template>
 
 <script setup>
   import CreateProjectModal from './CreateProjectModal.vue';
-  // import EditContractorModal from './EditContractorModal.vue';
+  import EditProjectModal from './EditProjectModal.vue';
+  import { Delete, Edit } from '@element-plus/icons-vue';
   import { getProjects, deleteProject } from '@/api/project';
   import { ref, onMounted, reactive } from 'vue';
   const showCreateProjectModal = ref(false);
-  // const showEditContractorModal = ref(false);
+  const showEditProjectModal = ref(false);
   const tableData = ref([]);
   const paginationData = reactive({
     pageCount: 0,
     currentPage: 0,
   });
   const params = reactive({
-    per_page: 1,
+    per_page: 100,
     page: 1,
   });
-  // const contractorData = ref(null);
   const search = ref('');
+  const projectData = ref({});
   const filterTableData = computed(() =>
     tableData.value.filter(
       (data) =>
         !search.value || data.contractor_name.toLowerCase().includes(search.value.toLowerCase())
     )
   );
-  // const handleEdit = (index, row) => {
-  //   console.log(index, row);
-  //   contractorData.value = row;
-  //   showEditContractorModal.value = true;
-  // };
+  const handleEdit = (index, row) => {
+    projectData.value = row;
+    showEditProjectModal.value = true;
+  };
   const loadingTable = ref(false);
   const handleDelete = async (index, row) => {
-    console.log(index, row);
     await deleteAProject(row.id);
     await loadProjects();
   };

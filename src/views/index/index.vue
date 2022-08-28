@@ -5,7 +5,7 @@
         <el-avatar :size="50" :src="avatar"></el-avatar>
       </div>
       <div class="head-card-content">
-        <h2 class="title">{{ sayHi }}! Vue3-Admin, {{ t('indexPage.descTitle') }}</h2>
+        <h2 class="title">{{ sayHi }}! Admin, {{ t('indexPage.descTitle') }}</h2>
         <p class="desc"> Welcome </p>
       </div>
     </div>
@@ -20,8 +20,8 @@
 </script>
 
 <script setup>
-  import { ref, computed, reactive, onBeforeMount } from 'vue';
-
+  import { ref, computed, reactive, onMounted, onBeforeMount } from 'vue';
+  import { getDashboard } from '@/api/dashboard';
   import { CountTo } from 'vue3-count-to';
   import Echarts from '@/components/Echarts/index.vue';
 
@@ -39,7 +39,7 @@
     orderList: [],
     skillList: [],
   });
-
+  const dashboardData = ref({});
   const hour = new Date().getHours();
   const thisTime =
     hour < 8
@@ -70,7 +70,16 @@
   const yAxis = reactive({
     type: 'value',
   });
-
+  async function loadDashboard() {
+    try {
+      const { data } = await getDashboard();
+      dashboardData.value = data;
+      console.log(dashboardData.value);
+    } catch (error) {}
+  }
+  onMounted(async () => {
+    await loadDashboard();
+  });
   const toolbox = reactive({
     show: true,
   });

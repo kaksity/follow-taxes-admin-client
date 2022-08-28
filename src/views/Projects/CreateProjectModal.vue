@@ -109,6 +109,7 @@
     budget_amount: '',
     year: '',
     sector_id: '',
+    contract_amount: '',
   });
   const validateForm = ref(null);
   const isLoading = ref(false);
@@ -162,7 +163,10 @@
     await loadSelectInputs();
   });
   function clearInputs() {
-    inputForm.mda_name = '';
+    inputForm.budget_amount = '';
+    inputForm.contract_amount = '';
+    inputForm.title = '';
+    inputForm.year = '';
   }
   async function createNewProject() {
     try {

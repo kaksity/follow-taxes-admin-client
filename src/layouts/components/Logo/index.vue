@@ -4,8 +4,9 @@
     class="logo-wrapper"
     :class="{ unfold: collapse, horizontal: mode === 'horizontal' }"
   >
-    <svg-icon name="vue" size="35px" />
-    <span class="logo-title" :style="{ color: textColor }" v-if="!collapse"> vue3-admin </span>
+    <span class="logo-title" :style="{ color: textColor }" v-if="!collapse">
+      <b>Administration</b>
+    </span>
   </div>
 </template>
 

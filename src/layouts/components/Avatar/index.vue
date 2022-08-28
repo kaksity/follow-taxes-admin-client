@@ -10,7 +10,6 @@
     </span>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item command="github">Github</el-dropdown-item>
         <el-dropdown-item command="logout" divided>{{ t('navbar.logOut') }}</el-dropdown-item>
       </el-dropdown-menu>
     </template>
@@ -59,7 +58,7 @@
   };
 
   const handleLogout = () => {
-    ElMessageBox.confirm(`${t('confirm.msg')}${title}？`, t('confirm.title'), {
+    ElMessageBox.confirm(`${t('confirm.msg')}？`, t('confirm.title'), {
       confirmButtonText: t('btn.confirm'),
       cancelButtonText: t('btn.cancel'),
       dangerouslyUseHTMLString: true,
