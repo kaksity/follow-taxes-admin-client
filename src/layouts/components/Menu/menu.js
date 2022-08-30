@@ -19,6 +19,15 @@ export default [
   },
   {
     hidden: false,
+    path: '/lga-budget-amount',
+    meta: {
+      title: 'LGA Budget Amount',
+      icon: 'home',
+      affix: true,
+    },
+  },
+  {
+    hidden: false,
     path: '/general-settings',
     meta: {
       icon: 'home',

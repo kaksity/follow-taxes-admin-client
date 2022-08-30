@@ -8,25 +8,30 @@
         label-width="auto"
         label-position="top"
       >
-        <el-form-item prop="projectState" label="Project State">
-          <el-select v-model="inputForm.state_id" filterable placeholder="Pick the State">
+        <el-form-item prop="lga" label="LGA">
+          <el-select v-model="inputForm.lga_id" filterable placeholder="Pick the LGA">
             <el-option
-              v-for="state in stateOptions"
-              :key="state.id"
-              :label="state.state_name"
-              :value="state.id"
+              v-for="lga in lgaOptions"
+              :key="lga.id"
+              :label="lga.lga_name"
+              :value="lga.id"
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="lgaName" label="LGA Name">
-          <el-input v-model="inputForm.lga_name" placeholder="Enter LGA Name" />
+        <el-form-item prop="amount" label="Amount">
+          <el-input v-model="inputForm.amount" placeholder="Enter Amount" />
+        </el-form-item>
+        <el-form-item prop="year" label="Year">
+          <el-input v-model="inputForm.year" placeholder="Enter Year" />
         </el-form-item>
       </el-form>
     </template>
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="closeModal">Cancel</el-button>
-        <el-button type="primary" :loading="isLoading" @click="createNewLGA">Create LGA</el-button>
+        <el-button type="primary" :loading="isLoading" @click="createNewLGABudgetAmount"
+          >Create LGA Budget Amount</el-button
+        >
       </div>
     </template>
   </el-dialog>
@@ -35,43 +40,52 @@
 <script setup>
   import { ref, reactive, onMounted, unref } from 'vue';
   import { getStates } from '@/api/state';
-  import { createLGA } from '@/api/lga';
+  import { getAllLGAs } from '@/api/lga';
+  import { createLGABudgetAmount } from '@/api/lga.budget.amount';
   const props = defineProps({
     show: Boolean,
   });
   const emits = defineEmits(['close', 'refresh']);
   const inputForm = reactive({
-    state_id: '',
-    lga_name: '',
+    lga_id: '',
+    year: '',
+    amount: '',
   });
   const validateForm = ref(null);
   const isLoading = ref(false);
   const rules = reactive({
-    lga_name: [
+    year: [
+      {
+        required: true,
+        message: 'Please enter the name of the year',
+      },
+    ],
+    amount: [
+      {
+        required: true,
+        message: 'Please enter the name of the amount',
+      },
+    ],
+    lga_id: [
       {
         required: true,
         message: 'Please enter the name of the LGA',
       },
     ],
-    state_id: [
-      {
-        required: true,
-        message: 'Please enter the name of the State',
-      },
-    ],
   });
   function clearInputs() {
-    inputForm.lga_name = '';
+    inputForm.amount = '';
+    inputForm.year = '';
   }
-  const stateOptions = ref([]);
+  const lgaOptions = ref([]);
   async function loadSelectInputs() {
-    const { data: stateData } = await getStates();
-    stateOptions.value = stateData;
+    const { data: lgaData } = await getAllLGAs();
+    lgaOptions.value = lgaData;
   }
   onMounted(async () => {
     await loadSelectInputs();
   });
-  async function createNewLGA() {
+  async function createNewLGABudgetAmount() {
     try {
       const form = unref(validateForm);
       if (!form) return;
@@ -80,7 +94,7 @@
         .validate((valid) => {
           if (valid) {
             isLoading.value = true;
-            createLGA(inputForm).then(() => {
+            createLGABudgetAmount(inputForm).then(() => {
               closeModal();
             });
           }

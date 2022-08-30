@@ -103,6 +103,16 @@ export const routes = [
           requiresAuth: true,
         },
       },
+      {
+        path: '/lga-budget-amount',
+        name: 'Lga Budget Amount',
+        component: () => import('@/views/LgaBudgetAmount/Index.vue'),
+        meta: {
+          title: 'Lga Budget Amount',
+          icon: 'icon-like',
+          requiresAuth: true,
+        },
+      },
     ],
   },
   {
