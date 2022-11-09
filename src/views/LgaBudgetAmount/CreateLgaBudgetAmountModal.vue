@@ -8,6 +8,16 @@
         label-width="auto"
         label-position="top"
       >
+        <el-form-item prop="projectSector" label="Project Sector">
+          <el-select v-model="inputForm.sector_id" filterable placeholder="Select the Sector">
+            <el-option
+              v-for="mda in sectorOptions"
+              :key="mda.id"
+              :label="mda.sector_name"
+              :value="mda.id"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item prop="lga" label="LGA">
           <el-select v-model="inputForm.lga_id" filterable placeholder="Pick the LGA">
             <el-option
@@ -41,6 +51,7 @@
   import { ref, reactive, onMounted, unref } from 'vue';
   import { getStates } from '@/api/state';
   import { getAllLGAs } from '@/api/lga';
+  import { getSectors } from '@/api/sector';
   import { createLGABudgetAmount } from '@/api/lga.budget.amount';
   const props = defineProps({
     show: Boolean,
@@ -53,6 +64,7 @@
   });
   const validateForm = ref(null);
   const isLoading = ref(false);
+  const sectorOptions = ref([]);
   const rules = reactive({
     year: [
       {
@@ -64,6 +76,12 @@
       {
         required: true,
         message: 'Please enter the name of the amount',
+      },
+    ],
+    sector_id: [
+      {
+        required: true,
+        message: 'Please enter the name of the Sector',
       },
     ],
     lga_id: [
@@ -81,6 +99,9 @@
   async function loadSelectInputs() {
     const { data: lgaData } = await getAllLGAs();
     lgaOptions.value = lgaData;
+
+    const { data: sectorData } = await getSectors();
+    sectorOptions.value = sectorData;
   }
   onMounted(async () => {
     await loadSelectInputs();

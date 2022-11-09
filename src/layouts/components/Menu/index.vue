@@ -83,7 +83,7 @@
   //   return store.getters['routes/routes'];
   // });
   const routes = menu;
-  console.log(routes)
+  console.log(routes);
   const isLogo = computed(() => {
     return store.getters['setting/isLogo'];
   });

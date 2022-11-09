@@ -18,8 +18,8 @@ let tokenLose = true;
  * @param {*} msg
  */
 const handleCode = (code, msg) => {
-  if(code === 401) {
-    router.push({ path: '/login' }).catch(() => {});  
+  if (code === 401) {
+    router.push({ path: '/login' }).catch(() => {});
   }
   ElMessage.error(msg || `Failed with code ${code}`);
 };

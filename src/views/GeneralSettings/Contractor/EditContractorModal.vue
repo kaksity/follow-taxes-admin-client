@@ -35,7 +35,7 @@
     },
   });
   const { contractor } = toRefs(props);
-    console.log(contractor.value)
+  console.log(contractor.value);
   const emits = defineEmits(['close', 'refresh']);
   const inputForm = reactive({
     contractor_name: contractor.value == null ? '' : contractor.value.contractor_name,

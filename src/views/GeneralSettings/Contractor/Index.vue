@@ -13,9 +13,8 @@
         </template>
         <template #default="scope">
           <!-- <el-button size="small" @click="handleEdit(scope.$index, scope.row)">Edit</el-button> -->
-          <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)"
-            >Delete</el-button
-          >
+          <el-button size="small" :icon="Delete" type="danger" @click="handleDelete(scope.$index, scope.row)"
+          />
         </template>
       </el-table-column>
     </el-table>
@@ -39,7 +38,9 @@
   // import EditContractorModal from './EditContractorModal.vue';
   import { getContractors, deleteContractor } from '@/api/contractor';
   import { ref, onMounted } from 'vue';
-  const showCreateContractorModal = ref(false);
+  import { Delete } from '@element-plus/icons-vue';
+
+const showCreateContractorModal = ref(false);
   // const showEditContractorModal = ref(false);
   const tableData = ref([]);
   // const contractorData = ref(null);
@@ -70,11 +71,12 @@
   }
   async function fetchContractors() {
     try {
-      loadingTable.value = true
+      loadingTable.value = true;
       const { data } = await getContractors();
       tableData.value = data;
-    } catch(e) {} finally {
-      loadingTable.value = false
+    } catch (e) {
+    } finally {
+      loadingTable.value = false;
     }
   }
   onMounted(async () => {

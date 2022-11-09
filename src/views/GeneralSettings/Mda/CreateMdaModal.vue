@@ -16,9 +16,7 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="closeModal">Cancel</el-button>
-        <el-button type="primary" :loading="isLoading" @click="createNewMda"
-          >Create MDA</el-button
-        >
+        <el-button type="primary" :loading="isLoading" @click="createNewMda">Create MDA</el-button>
       </div>
     </template>
   </el-dialog>

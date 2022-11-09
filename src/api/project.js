@@ -12,7 +12,7 @@ export async function getProjects(params = null) {
   return await request({
     url: '/projects',
     method: 'get',
-    params
+    params,
   });
 }
 

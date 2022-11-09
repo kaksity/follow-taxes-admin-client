@@ -7,6 +7,7 @@
     </div>
     <el-table :data="filterTableData" v-loading="loadingTable" style="width: 100%">
       <el-table-column label="LGA" prop="lga.lga_name" />
+      <el-table-column label="Sector" prop="sector.sector_name" />
       <el-table-column label="Amount" prop="amount" />
       <el-table-column label="Year" prop="year" />
       <el-table-column align="right">
@@ -15,9 +16,12 @@
         </template>
         <template #default="scope">
           <!-- <el-button size="small" @click="handleEdit(scope.$index, scope.row)">Edit</el-button> -->
-          <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)"
-            >Delete</el-button
-          >
+          <el-button
+            size="small"
+            :icon="Delete"
+            type="danger"
+            @click="handleDelete(scope.$index, scope.row)"
+            />
         </template>
       </el-table-column>
     </el-table>
@@ -41,6 +45,7 @@
   // import EditContractorModal from './EditContractorModal.vue';
   import { getAllLGABudgetAmounts, deleteLGABudgetAmount } from '@/api/lga.budget.amount';
   import { ref, onMounted } from 'vue';
+  import { Delete } from '@element-plus/icons-vue';
   const showCreateLgaBudgetAmountModal = ref(false);
   // const showEditContractorModal = ref(false);
   const tableData = ref([]);

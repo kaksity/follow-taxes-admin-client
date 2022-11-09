@@ -69,7 +69,8 @@
       loadingTable.value = true;
       const { data } = await getAllLGAs();
       tableData.value = data;
-    } catch(e) {} finally {
+    } catch (e) {
+    } finally {
       loadingTable.value = false;
     }
   }

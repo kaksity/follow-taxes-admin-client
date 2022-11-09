@@ -42,7 +42,7 @@
   const tableData = ref([]);
   // const contractorData = ref(null);
   const search = ref('');
-  const loadingTable = ref(false)
+  const loadingTable = ref(false);
   const filterTableData = computed(() =>
     tableData.value.filter(
       (data) =>
@@ -68,7 +68,8 @@
       loadingTable.value = true;
       const { data } = await getMdas();
       tableData.value = data;
-    } catch(e) {} finally {
+    } catch (e) {
+    } finally {
       loadingTable.value = false;
     }
   }
