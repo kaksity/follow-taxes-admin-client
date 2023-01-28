@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="props.show" title="Create Sector">
+  <el-dialog v-model="props.show" title="Edit Contractor">
     <template #default>
       <el-form
         ref="validateForm"
@@ -8,26 +8,16 @@
         label-width="auto"
         label-position="top"
       >
-        <el-form-item prop="budgetCategory" label="Budget Category">
-          <el-select v-model="inputForm.sector_id" filterable placeholder="Select the Category">
-            <el-option
-              v-for="mda in sectorOptions"
-              :key="mda.id"
-              :label="mda.sector_name"
-              :value="mda.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="sectorName" label="Sector's Name">
-          <el-input v-model="inputForm.sector_name" placeholder="Enter Sectors's Name" />
+        <el-form-item prop="contractorName" label="Contractor Name">
+          <el-input v-model="inputForm.contractor_name" placeholder="Enter Contractor Name" />
         </el-form-item>
       </el-form>
     </template>
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="closeModal">Cancel</el-button>
-        <el-button type="primary" :loading="isLoading" @click="createNewSector"
-          >Create Sector</el-button
+        <el-button type="primary" :loading="isLoading" @click="updateAContractor"
+          >Update Contractor</el-button
         >
       </div>
     </template>
@@ -35,29 +25,35 @@
 </template>
 
 <script setup>
-  import { ref, reactive, unref } from 'vue';
-  import { createSector } from '@/api/sector';
+  import { ref, reactive, unref, toRefs } from 'vue';
+  import { updateContractor } from '@/api/contractor';
   const props = defineProps({
     show: Boolean,
+    contractor: {
+      id: String,
+      contractor_name: String,
+    },
   });
+  const { contractor } = toRefs(props);
+  console.log(contractor.value);
   const emits = defineEmits(['close', 'refresh']);
   const inputForm = reactive({
-    sector_name: '',
+    contractor_name: contractor.value == null ? '' : contractor.value.contractor_name,
   });
   const validateForm = ref(null);
   const isLoading = ref(false);
   const rules = reactive({
-    sector_name: [
+    contractor_name: [
       {
         required: true,
-        message: 'Please enter the name of the Sector',
+        message: 'Please enter the name of the Contractor',
       },
     ],
   });
   function clearInputs() {
-    inputForm.sector_name = '';
+    inputForm.contractor_name = '';
   }
-  async function createNewSector() {
+  async function updateAContractor() {
     try {
       const form = unref(validateForm);
       if (!form) return;
@@ -66,10 +62,8 @@
         .validate((valid) => {
           if (valid) {
             isLoading.value = true;
-            console.log(inputForm);
-            createSector(inputForm).then(() => {
-              closeModal();
-            });
+            updateContractor(contractor.value.id, inputForm).then(() => {});
+            closeModal();
           }
         })
         .finally(() => {
